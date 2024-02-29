@@ -22,9 +22,8 @@ pipeline {
             steps {
                 dir('WeighBridge') {
                     script {
-                        // Adjust the deploy step as needed
-                        // Example: deploy to a local Tomcat server
-                        bat 'copy target/*.war C:\\path\\to\\tomcat\\webapps'
+                        // Use xcopy for copying files in Windows
+                        bat 'xcopy /Y /I target\\*.war "C:\\path\\to\\tomcat\\webapps\\"'
                     }
                 }
             }
