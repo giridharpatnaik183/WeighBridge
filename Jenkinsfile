@@ -26,8 +26,8 @@ pipeline {
                         bat 'xcopy /Y /I target\\*.war "C:\\Users\\HP\\Downloads\\Compressed\\apache-tomcat-11.0.0-M17\\apache-tomcat-11.0.0-M17\\webapps\\"'
                         
                         // Deploy using curl with credentials
-                        def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true
-                        if (undeployResult == 0) {
+                        def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
+                        if (undeployResult.trim() == 'FAIL - No context exists named [&#47;]') {
                             echo 'Undeploy successful'
                         } else {
                             echo 'No application to undeploy'
