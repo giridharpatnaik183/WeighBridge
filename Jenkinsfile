@@ -29,11 +29,12 @@ pipeline {
                     // Use 'returnStdout' to capture the output as a string
                     def undeployResult = bat(script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true).trim()
                         // Check the value directly, no need to call trim()
-                        if (undeployResult == '1') {
+                        if (undeployResult.equals('1')) {
                             echo 'Undeploy successful'
                         } else {
                             echo 'No application to undeploy'
                         }
+
 
 
                     // Deploy using curl with credentials
