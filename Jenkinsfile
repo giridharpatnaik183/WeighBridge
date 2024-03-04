@@ -31,6 +31,8 @@ pipeline {
                             echo 'Undeploy successful'
                         } else {
                             echo 'No application to undeploy'
+                            // Add a delay after undeploying
+                            sleep 30
                         }
 
                         // Find the latest WAR file in the target directory using PowerShell
