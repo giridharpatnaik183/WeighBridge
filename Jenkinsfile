@@ -29,7 +29,7 @@ pipeline {
                             // Use 'returnStdout' to capture the output as a string
                             def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
                             // Check the value directly, no need to call trim()
-                            if (undeployResult == 'FAIL - No context exists named [&#47;]') {
+                            if (undeployResult == 1) {
                                 echo 'Undeploy successful'
                             } else {
                                 echo 'No application to undeploy'
