@@ -27,7 +27,7 @@ pipeline {
                         
                         // Deploy using curl with credentials
                         def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
-                        if (undeployResult.trim() == 'FAIL - No context exists named [&#47;]') {
+                        if (undeployResult.toString().trim() == 'FAIL - No context exists named [&#47;]') {
                             echo 'Undeploy successful'
                         } else {
                             echo 'No application to undeploy'
@@ -36,7 +36,7 @@ pipeline {
                         }
 
                         // Find the latest WAR file in the target directory using PowerShell
-                        def warFileName = bat(script: 'powershell -Command "Get-ChildItem target\\*.war | Sort-Object LastWriteTime | Select-Object -Last 1"', returnStatus: true, returnStdout: true).trim()
+                        def warFileName = bat(script: 'powershell -Command "Get-ChildItem target\\*.war | Sort-Object LastWriteTime | Select-Object -Last 1"', returnStatus: true, returnStdout: true).toString().trim()
 
                         if (warFileName) {
                             // Deploy using curl with credentials
