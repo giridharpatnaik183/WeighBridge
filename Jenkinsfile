@@ -28,12 +28,14 @@ pipeline {
                 if (warFilePath) {
                     // Use 'returnStdout' to capture the output as a string
                     def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
-                    // Check if undeployResult is a non-empty string
-                    if (undeployResult && undeployResult.trim() == 'OK - Undeployed application at context path /') {
+
+                    // Check the value directly, no need to call trim()
+                    if (undeployResult == 1) {
                         echo 'Undeploy successful'
                     } else {
-                        echo 'No application to undeploy or undeploy failed'
+                        echo 'No application to undeploy'
                     }
+
 
                     // Deploy using curl with credentials
                     def deployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/deploy?path=/&war=file:' + warFilePath + '"', returnStatus: true
