@@ -22,22 +22,23 @@ pipeline {
             steps {
                 dir('WeighBridge') {
                     script {
-                        // Build the path to the WAR file
-                        def warFilePath = bat(script: 'powershell -Command "Get-ChildItem target\\*.war | Sort-Object LastWriteTime | Select-Object -Last 1"', returnStatus: true, returnStdout: true).trim()
+                        // Use xcopy for copying files in Windows
+                        bat 'xcopy /Y /I target\\*.war "C:\\Users\\HP\\Downloads\\Compressed\\apache-tomcat-11.0.0-M17\\apache-tomcat-11.0.0-M17\\webapps\\"'
+                        
+                        // Deploy using curl with credentials
+                        def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
+                        if (undeployResult.trim() == 'FAIL - No context exists named [&#47;]') {
+                            echo 'Undeploy successful'
+                        } else {
+                            echo 'No application to undeploy'
+                        }
 
-                        if (warFilePath) {
-                            // Use 'returnStdout' to capture the output as a string
-                            def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
-                            // Check the value directly, no need to call trim()
-                            if (undeployResult == 'FAIL - No context exists named [&#47;]') {
-                                echo 'Undeploy successful'
-                            } else {
-                                echo 'No application to undeploy'
-                            }
+                        // Find the latest WAR file in the target directory using PowerShell
+                        def warFileName = bat(script: 'powershell -Command "Get-ChildItem target\\*.war | Sort-Object LastWriteTime | Select-Object -Last 1"', returnStatus: true, returnStdout: true).trim()
 
-                            // Deploy using curl with credentials
-                            def deployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/deploy?path=/&war=file:' + warFilePath + '"', returnStatus: true
-
+                        if (warFileName) {
+                            // Your existing deployment logic
+                            def deployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/deploy?path=/&war=file:C:/Users/HP/Downloads/Compressed/apache-tomcat-11.0.0-M17/apache-tomcat-11.0.0-M17/webapps/' + warFileName + '"', returnStatus: true
                             if (deployResult == 0) {
                                 echo 'Deployment successful'
                             } else {
