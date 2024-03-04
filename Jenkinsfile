@@ -27,8 +27,7 @@ pipeline {
                         
                         // Deploy using curl with credentials
                         def undeployResult = bat script: 'curl --user robot:admin "http://localhost:8080/manager/text/undeploy?path=/"', returnStatus: true, returnStdout: true
-                        // Check if undeploy was successful based on the exit code
-                        if (undeployResult == 0) {
+                        if (undeployResult.trim() == 'FAIL - No context exists named [&#47;]') {
                             echo 'Undeploy successful'
                         } else {
                             echo 'No application to undeploy'
