@@ -6,7 +6,7 @@
 
 			$.ajax({
 				type : 'POST',
-				url : '${pageContext.request.contextPath}/check?role=' + role + '&userId=' + uid + '&password='
+				url : '/check?role=' + role + '&userId=' + uid + '&password='
 						+ password, // Replace with the path to your server-side script
 
 				success : function(response) {
